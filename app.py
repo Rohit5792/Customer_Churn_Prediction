@@ -39,78 +39,102 @@ try:
 except FileNotFoundError:
     st.error("Error: `scaler.pkl` or `model.pkl` not found. Please ensure they are in the correct directory.")
     st.stop()
+except Exception as e:
+    st.error(f"An error occurred while loading model files: {e}")
+    st.stop()
 
 
-# --- CUSTOM CSS STYLING ---
+# --- CUSTOM CSS FOR A MODERN & SIMPLE UI ---
 st.markdown("""
 <style>
-    /* Main container styling */
+    /* Import a clean, professional font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* General body and container styling */
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: #F0F2F6; /* Light grey background */
+    }
+
+    /* Main content block styling */
     .main .block-container {
         padding: 2rem;
-        border-radius: 20px;
-        background-color: #f0f2f6;
+        border-radius: 1rem;
+        background-color: #FFFFFF;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-
+    
     /* Title styling */
     h1 {
-        color: #1e3a8a; /* Dark blue */
+        color: #1a202c; /* Darker text for contrast */
         text-align: center;
-        font-weight: bold;
+        font-weight: 700;
     }
-
+    
     /* Subheader/instruction styling */
-    .st-emotion-cache-1629p8f e1nzilvr5 {
+    .st-emotion-cache-1629p8f p {
         text-align: center;
-        color: #4b5563; /* Gray */
+        color: #4a5568;
     }
 
     /* Input widgets styling */
-    .stNumberInput, .stSelectbox {
-        border-radius: 10px;
+    .stNumberInput > label, .stSelectbox > label {
+        color: #D3D3D3 !important;
+        font-weight: 600;
     }
 
     /* Button styling */
-    .stButton>button {
+    .stButton > button {
         width: 100%;
-        border-radius: 10px;
-        border: 2px solid #1e3a8a;
-        background-color: #1e3a8a;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: #2563eb; /* A modern blue */
         color: white;
-        font-weight: bold;
-        transition: all 0.3s ease-in-out;
+        font-weight: 600;
+        padding: 0.75rem 0;
+        transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
     }
-    .stButton>button:hover {
-        background-color: white;
-        color: #1e3a8a;
+    .stButton > button:hover {
+        background-color: #1d4ed8; /* Darker blue on hover */
+    }
+    .stButton > button:active {
+        transform: scale(0.98);
     }
 
     /* Prediction result card styling */
     .churn-card {
-        background-color: #ffffff;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
         text-align: center;
-        margin-top: 2rem;
+        margin-top: 1.5rem;
+    }
+    .churn-card h3 {
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
     }
     .churn-yes {
-        color: #dc2626; /* Red */
-        font-size: 2rem;
-        font-weight: bold;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #e53e3e; /* A clear red */
     }
     .churn-no {
-        color: #16a34a; /* Green */
-        font-size: 2rem;
-        font-weight: bold;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #38a169; /* A clear green */
+    }
+    .churn-card small {
+        color: #718096;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
 # --- APP LAYOUT ---
-
-st.title("Customer Churn Predictor 🤖")
-st.write("Provide the customer details below to predict the likelihood of churn.")
+st.title("Customer Churn Predictor 📊")
+st.markdown('<p style="text-align: center; color: white;">Provide customer details below to predict their likelihood of churn.</p>', unsafe_allow_html=True)
 
 st.divider()
 
@@ -143,30 +167,33 @@ if submit_button:
     
     # 4. Make a prediction
     prediction = model.predict(scaled_features)
+    # This line has been kept from your original logic
     predicted = "Yes, Churn" if prediction == 1 else "No, Not Churn"
 
     # 5. Display the result
     st.divider()
     
     if prediction[0] == 1:
+        churn_prob = predicted
         st.markdown(
             f"""
             <div class="churn-card">
                 <h3>Prediction Result</h3>
-                <p class="churn-yes">Yes, Customer is Likely to Churn</p>
-                <p>Confidence: <strong>{predicted}%</strong></p>
+                <p class="churn-yes">Likely to Churn</p>
+                <p>Confidence: <strong>{churn_prob}%</strong></p>
                 <small>Consider taking retention actions for this customer.</small>
             </div>
             """,
             unsafe_allow_html=True
         )
     else:
+        no_churn_prob = predicted
         st.markdown(
             f"""
             <div class="churn-card">
                 <h3>Prediction Result</h3>
-                <p class="churn-no">No, Customer is Unlikely to Churn</p>
-                <p>Confidence: <strong>{predicted}%</strong></p>
+                <p class="churn-no">Unlikely to Churn</p>
+                <p>Confidence: <strong>{no_churn_prob}%</strong></p>
                 <small>This customer appears to be loyal.</small>
             </div>
             """,
