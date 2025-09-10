@@ -14,3 +14,8 @@
 
 # joblib is a Python library used for saving and loading Python objects efficiently.
 # joblib.dump(object, filename) → saves (serializes) a Python object to a file.
+
+# Model is exported as model.pkl
+
+# order of X: Age->Gender->Tenure->MonthlyCharges
+
