@@ -129,11 +129,3 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 This project is licensed under the [MIT License](LICENSE).
 
 ---
-
-## Contact Information
-
-- **GitHub:** [Tejas-00](https://github.com/Tejas-00)
-- **LinkedIn:** [Tejas Sonawane](https://www.linkedin.com/in/link-tejas/)
-- **Email:** tejassonawanework@gmail.com
-
----
